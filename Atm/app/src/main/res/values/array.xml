@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="funs">
+        <item>餘額查詢</item>
+        <item>交易明細</item>
+        <item>最新消息</item>
+        <item>投資理財</item>
+        <item>離開</item>
+    </array>
+    <array name="notify">
+        <item>永不</item>
+        <item>只有震動</item>
+        <item>只有提示音</item>
+        <item>震動與提示音</item>
+    </array>
+</resources>
