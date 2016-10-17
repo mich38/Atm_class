@@ -6,7 +6,11 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -15,6 +19,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -28,11 +35,15 @@ public class TransActivity extends AppCompatActivity {
 
     private static final String TAG = "TransActivity";
     OkHttpClient client = new OkHttpClient();
+    private ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trans);
+
+        list = (ListView) findViewById(R.id.list);
+
 
         //http://atm201605.appspot.com/h
         //new TransTask().execute("http://atm201605.appspot.com/h");
@@ -57,22 +68,6 @@ public class TransActivity extends AppCompatActivity {
                 parseJSON(json);
             }
         });
-
-    }
-
-    class Test{
-        JSONObject customerInfo = new JSONObject();
-
-        //customerInfo
-//        customerInfo.
-//        customerInfo.put("ID", "test");
-//        customerInfo.put("Name", "name");
-//
-//
-//        DefaultHttpClient httpClient = new DefaultHttpClient();
-//        HttpPost httpPost = new HttpPost("http://203.69.209.136/demo/www_new/saveinfo.php?data=" + params);//output is the variable you used in your program
-//        httpClient.execute(httpPost);
-//        Log.d(TAG, customerInfo.toString());
     }
 
     class TransTask extends AsyncTask<String, Void, String>{
@@ -107,6 +102,33 @@ public class TransActivity extends AppCompatActivity {
     }
 
     private void parseJSON(String s) {
+        ArrayList<Map<String,String>> data = new ArrayList();
+        try {
+            JSONArray array = new JSONArray(s);
+            for (int i=0;i<array.length();i++){
+                JSONObject obj = array.getJSONObject(i);
+                String date = obj.getString("date");
+                int amount = obj.getInt("amount");
+                int type = obj.getInt("type");
+                Log.d(TAG,"OBJ : "+ date +"/" + amount + "/" + type);
+                HashMap<String,String> hash = new HashMap<>();
+                hash.put("date",date);
+                hash.put("amount",amount+"");
+                hash.put("type",type+"");
+                data.add(hash);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String[] from = {"date","amount","type"};
+        int[] to = {R.id.ed_date,R.id.ed_amount,R.id.ed_type};
+        final SimpleAdapter adapter = new SimpleAdapter(this,data,R.layout.trans_row,from,to);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                list.setAdapter(adapter);
+            }
+        });
 
     }
 }
