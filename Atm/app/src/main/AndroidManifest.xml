@@ -35,7 +35,8 @@
             android:label="@string/title_activity_finance"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddActivity" />
-        <activity android:name=".TransActivity"></activity>
+        <activity android:name=".TransActivity" />
+        <activity android:name=".StockActivity"></activity>
     </application>
 
 </manifest>
