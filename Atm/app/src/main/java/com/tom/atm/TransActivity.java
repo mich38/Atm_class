@@ -9,6 +9,11 @@ import android.util.Log;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,10 +22,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -65,9 +72,30 @@ public class TransActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 String json = response.body().string();
                 Log.d(TAG,"JSON:" + json);
-                parseJSON(json);
+                //parseJSON(json);
+                //parseJSON2(json);
+               // parseGSON(json);
+                parseJackson(json);
             }
         });
+    }
+
+    private void parseJackson(String json) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            ArrayList<Transaction> list = objectMapper.readValue(json, new TypeReference<ArrayList<Transaction>>(){});
+            Log.d("Jackson",list.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void parseGSON(String json) {
+        Gson gson = new Gson();
+        ArrayList<Transaction> trans = gson.fromJson(json,new TypeToken<ArrayList<Transaction>>(){}.getType());
+        Log.d("GSON",trans.toString());
     }
 
     class TransTask extends AsyncTask<String, Void, String>{
@@ -101,20 +129,47 @@ public class TransActivity extends AppCompatActivity {
         }
     }
 
-    private void parseJSON(String s) {
-        ArrayList<Map<String,String>> data = new ArrayList();
+    private void parseJSON2(String s) {
         try {
             JSONArray array = new JSONArray(s);
-            for (int i=0;i<array.length();i++){
+            ArrayList<Transaction> trans = new ArrayList<>();
+
+            for (int i = 0; i < array.length(); i++) {
                 JSONObject obj = array.getJSONObject(i);
                 String date = obj.getString("date");
                 int amount = obj.getInt("amount");
                 int type = obj.getInt("type");
-                Log.d(TAG,"OBJ : "+ date +"/" + amount + "/" + type);
-                HashMap<String,String> hash = new HashMap<>();
-                hash.put("date",date);
-                hash.put("amount",amount+"");
-                hash.put("type",type+"");
+                Log.d(TAG, "OBJ : " + date + "/" + amount + "/" + type);
+                Transaction t = new Transaction(date,amount,type);
+                trans.add(t);
+            }
+            //debug
+            /*for (Transaction t : trans){
+                Log.d(TAG,t.getDate() + "/" + t.getAmount() + "/" + t.getType());
+            }*/
+            Log.d(TAG,trans.toString()); //overwrite toString()
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void parseJSON(String s) {
+        ArrayList<Map<String,String>> data = new ArrayList();
+        try {
+            JSONArray array = new JSONArray(s);
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject obj = array.getJSONObject(i);
+                String date = obj.getString("date");
+                int amount = obj.getInt("amount");
+                int type = obj.getInt("type");
+                Log.d(TAG, "OBJ : " + date + "/" + amount + "/" + type);
+                HashMap<String, String> hash = new HashMap<>();
+                hash.put("date", date);
+                hash.put("amount", amount + "");
+                hash.put("type", type + "");
                 data.add(hash);
             }
         } catch (JSONException e) {
