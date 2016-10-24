@@ -3,6 +3,7 @@
     package="com.tom.atm">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -36,7 +37,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddActivity" />
         <activity android:name=".TransActivity" />
-        <activity android:name=".StockActivity"></activity>
+        <activity android:name=".StockActivity" />
+        <activity android:name=".ContactActivity"></activity>
     </application>
 
 </manifest>
