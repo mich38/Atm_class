@@ -5,6 +5,8 @@ import android.app.DownloadManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -43,6 +45,7 @@ public class TransActivity extends AppCompatActivity {
     private static final String TAG = "TransActivity";
     OkHttpClient client = new OkHttpClient();
     private ListView list;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class TransActivity extends AppCompatActivity {
         setContentView(R.layout.activity_trans);
 
         list = (ListView) findViewById(R.id.list);
+        recyclerView = (RecyclerView) findViewById(R.id.rec);
 
 
         //http://atm201605.appspot.com/h
@@ -84,12 +88,23 @@ public class TransActivity extends AppCompatActivity {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            ArrayList<Transaction> list = objectMapper.readValue(json, new TypeReference<ArrayList<Transaction>>(){});
-            Log.d("Jackson",list.toString());
+            final ArrayList<Transaction> trans = objectMapper.readValue(json, new TypeReference<ArrayList<Transaction>>(){});
+            Log.d("Jackson",trans.toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setupRecyclerView(trans);
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    private void setupRecyclerView(ArrayList<Transaction> trans) {
+        TransactionAdapter adapter = new TransactionAdapter(trans);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void parseGSON(String json) {
