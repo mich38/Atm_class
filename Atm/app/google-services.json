@@ -49,6 +49,50 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1099414557470:android:f91a48d56446ca29",
+        "android_client_info": {
+          "package_name": "com.mich.atm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1099414557470-ln6bj5h0j01b49pc7eriuvgtnng98ha3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mich.atm",
+            "certificate_hash": "86C8E1981E646C988D5C54F921B75E0F62361768"
+          }
+        },
+        {
+          "client_id": "1099414557470-s7tvurt3t76a1mek6hvurh90c0a3rnj0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS9MqG4oQjDaougyMLovuMev_kZHZxVKU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1099414557470-s7tvurt3t76a1mek6hvurh90c0a3rnj0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"
